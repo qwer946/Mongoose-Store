@@ -85,7 +85,7 @@ app.post("/books", (req, res) => {
   //   //if not checked, req.body.completed is undefined
   //   req.body.completed = false;
   // }
-
+  req.body.price = 0;
   Book.create(req.body, (error, createdBook) => {
     res.redirect("/books");
   });
