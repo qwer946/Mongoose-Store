@@ -58,11 +58,11 @@ app.delete("/books/:id", (req, res) => {
 
 // UPDATE
 app.put("/books/:id", (req, res) => {
-  if (req.body.completed === "on") {
-    req.body.completed = true;
-  } else {
-    req.body.completed = false;
-  }
+  // if (req.body.completed === "on") {
+  //   req.body.completed = true;
+  // } else {
+  //   req.body.completed = false;
+  // }
 
   Book.findByIdAndUpdate(
     req.params.id,
@@ -77,19 +77,19 @@ app.put("/books/:id", (req, res) => {
 });
 
 // CREATE
-// app.post("/books", (req, res) => {
-//   if (req.body.completed === "on") {
-//     //if checked, req.body.completed is set to 'on'
-//     req.body.completed = true;
-//   } else {
-//     //if not checked, req.body.completed is undefined
-//     req.body.completed = false;
-//   }
+app.post("/books", (req, res) => {
+  // if (req.body.completed === "on") {
+  //   //if checked, req.body.completed is set to 'on'
+  //   req.body.completed = true;
+  // } else {
+  //   //if not checked, req.body.completed is undefined
+  //   req.body.completed = false;
+  // }
 
-//   Book.create(req.body, (error, createdBook) => {
-//     res.redirect("/books");
-//   });
-// });
+  Book.create(req.body, (error, createdBook) => {
+    res.redirect("/books");
+  });
+});
 
 // EDIT
 app.get("/books/:id/edit", (req, res) => {
