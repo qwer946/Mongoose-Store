@@ -6,22 +6,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Book List</title>
   </head>
-  <body>
-    <h1>My Reading List</h1>
 
+  <body>
     <nav>
       <a href="/books/new">Add a New Book</a>
     </nav>
-    <ul>
-      <% books.forEach(book => { %>
-      <li><%=book.title; %></li>
-      <li><%=book.author; %></li>
-      <li>
-        <a href="/books/<%=book._id; %>"> <%=book.title; %> </a>
-      </li>
 
+    <h1>My Reading List</h1>
+    <div class="container">
+        <ul>
+      <% books.forEach(book=> { %>
+      <li>
+        <a href="/books/<%=book._id; %>">
+          <img src=" <%=book.img; %>" alt="">
+          <div class="booklet">
+               <%=book.description; %>
+
+          </div>
+          <div class="bookpr">
+               <%=book.price; %>
+          </div> 
+
+
+
+
+
+
+        </a>
+
+
+
+
+
+    </div>
+    
+
+        <form
+          action="/books/<%= book.id %>?_method=DELETE"
+          method="POST"
+          style="display: inline; margin-left: 16px"
+        >
+          <input type="submit" value="DELETE" />
+        </form>
+        <a href="/books/<%=book._id %>/edit">Edit</a>
+      </li>
       <% }) %>
     </ul>
   </body>
 </html>
-<!-- hi -->
