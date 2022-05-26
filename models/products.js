@@ -4,14 +4,14 @@
 const mongoose = require("mongoose");
 
 // we are creating a new book schema object.
-const bookSchema = new mongoose.Schema({
+const storeSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  description: String,
-  img: String,
-  price: Number,
-  qty: Number,
+  description: { type: String },
+  img: { type: String },
+  price: { type: Number, min: 0 },
+  qty: { type: Number, min: 0 },
 });
 
-const Book = mongoose.model("Book", bookSchema);
+const Store = mongoose.model("Store", storeSchema);
 
-module.exports = Book;
+module.exports = Store;

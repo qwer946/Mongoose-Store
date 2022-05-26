@@ -4,23 +4,22 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Book List</title>
+    <title>Edit Page</title>
   </head>
-
   <body>
-    <h1>Edit Book</h1>
-    <form action="/books/<%=book._id %>?_method=PUT" method="POST">
-      <!--  NOTE: the form is pre-populated with values for the server-->
-      description:
+    <h1>Edit Product</h1>
+    <form action="/store/<%=product._id%>?_method=PUT" method="POST">
+      Name:<input type="text" name="name" value="<%=product.name%>" /><br />
+      Description:
       <input
         type="text"
         name="description"
-        value="<%=book.description%>"
+        value="<%=product.description%>"
       /><br />
-      price: <input type="text" name="author" value="<%=book.price%>" /><br />
-      img: <img src="<%=book.img%>" alt="" />
-      <br />
-      <input type="submit" value="Submit Changes" />
+      Price: <input type="text" name="price" value="<%=product.price%>" /><br />
+      Image URL: <input type="text" name="img" value="<%=product.img%>" /><br />
+      Quantity: <input type="text" name="qty" value="<%=product.qty%>" /><br />
+      <a href="/store"></a><input type="submit" value="Submit Changes" />
     </form>
   </body>
 </html>

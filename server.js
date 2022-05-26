@@ -1,116 +1,108 @@
-// Dependencies
+//Require Dependencies
+require("dotenv").config();
 const express = require("express");
 const app = express();
-require("dotenv").config();
 const mongoose = require("mongoose");
-const Book = require("./models/products");
 const methodOverride = require("method-override");
-// const Books = require("./models/Seed");
 
-// Database Connection
+//Import Model
+const Store = require("./models/products");
+
+//Database Connection
 mongoose.connect(process.env.DATABASE_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-
 // Database Connection Error/Success
-// Define callback functions for various events
 const db = mongoose.connection;
 db.on("error", (err) => console.log(err.message + " is mongo not running?"));
 db.on("connected", () => console.log("mongo connected"));
 db.on("disconnected", () => console.log("mongo disconnected"));
 
-// MIDDLEWARE & BODY PARSER
+//MIDDLEWARE & BODY PARSER
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 
-// SEED DATA!
-const bookSeed = require("./models/Seed");
-app.get("/books/seed", (req, res) => {
-  Book.deleteMany({}, (error, allBooks) => {});
+//ROUTES
 
-  Book.create(bookSeed, (error, data) => {
-    res.redirect("/books");
+//INDEX
+app.get("/store", (req, res) => {
+  Store.find({}, (err, allProducts) => {
+    res.render("index.ejs", { products: allProducts });
   });
 });
 
-// ROUTES
-// INDEX
-app.get("/books", (req, res) => {
-  Book.find({}, (error, allBooks) => {
-    res.render("index.ejs", {
-      books: allBooks,
-    });
-  });
-});
-
-// NEW
-app.get("/books/new", (req, res) => {
+//NEW
+app.get("/store/new", (req, res) => {
   res.render("new.ejs");
 });
 
-// DELETE
-app.delete("/books/:id", (req, res) => {
-  Book.findByIdAndDelete(req.params.id, (err, data) => {
-    res.redirect("/books");
+//DELETE
+app.delete("/store/:id", (req, res) => {
+  Store.findByIdAndRemove(req.params.id, (err, deletedStore) => {
+    res.redirect("/store");
   });
 });
 
-// UPDATE
-app.put("/books/:id", (req, res) => {
-  // if (req.body.completed === "on") {
-  //   req.body.completed = true;
-  // } else {
-  //   req.body.completed = false;
-  // }
-
-  Book.findByIdAndUpdate(
+//UPDATE
+app.put("/store/:id", (req, res) => {
+  if (req.body.completed === "on") {
+    req.body.completed = true;
+  } else {
+    req.body.completed = false;
+  }
+  Store.findByIdAndUpdate(
     req.params.id,
     req.body,
     {
       new: true,
     },
-    (error, updatedBook) => {
-      res.redirect(`/books/${req.params.id}`);
+    (error, updatedStore) => {
+      res.redirect(`/store/${req.params.id}`);
     }
   );
 });
-
-// CREATE
-app.post("/books", (req, res) => {
-  // if (req.body.completed === "on") {
-  //   //if checked, req.body.completed is set to 'on'
-  //   req.body.completed = true;
-  // } else {
-  //   //if not checked, req.body.completed is undefined
-  //   req.body.completed = false;
-  // }
-  req.body.price = 0;
-  Book.create(req.body, (error, createdBook) => {
-    res.redirect("/books");
+//CREATE
+app.post("/store", (req, res) => {
+  Store.create(req.body, (err, createdStore) => {
+    if (err) console.log(err);
+    res.redirect("/store");
   });
 });
 
-// EDIT
-app.get("/books/:id/edit", (req, res) => {
-  Book.findById(req.params.id, (error, foundBook) => {
+//BUY
+app.post("/store/:id/buy", (req, res) => {
+  Store.findById(req.params.id, (err, data) => {
+    if (data.qty > 0) {
+      data.qty--;
+      data.save(() => {
+        res.redirect(`/store/${data.id}`);
+      });
+    } else {
+      res.redirect(`/store/${data.id}`);
+    }
+  });
+});
+//EDIT
+app.get("/store/:id/edit", (req, res) => {
+  Store.findById(req.params.id, (error, foundStore) => {
     res.render("edit.ejs", {
-      book: foundBook,
+      product: foundStore,
     });
   });
 });
 
-// SHOW
-app.get("/books/:id", (req, res) => {
-  Book.findById(req.params.id, (err, foundBook) => {
+//SHOW
+app.get("/store/:id", (req, res) => {
+  Store.findById(req.params.id, (err, foundStore) => {
     res.render("show.ejs", {
-      book: foundBook,
+      product: foundStore,
     });
   });
 });
 
-// Listenter
+//LISTENER
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
-  console.log(`The server is listening on port: ${PORT}`);
+  console.log("The server is listening on port", PORT);
 });
